@@ -1,5 +1,6 @@
 import formidable from "formidable";
 import fs from "fs";
+import path from 'path'
 
 export const config = {
   api: {
@@ -16,10 +17,10 @@ const post = async (req, res) => {
 };
 
 const saveFile = async (file) => {
-  const data = fs.readFileSync(file?.path || file?.filepath);
-  console.log(data)
-  fs.writeFileSync(`./public/upload/${file.originalFilename}`, data);
-  await fs.unlinkSync(file.path);
+  const data = fs.readFileSync(file.filepath);
+  const filtPath = path.resolve(process.cwd(), './public', 'upload', file.originalFilename);
+  fs.writeFileSync(filtPath, data);
+  await fs.unlinkSync(file.filepath);
   return;
 };
 

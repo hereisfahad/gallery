@@ -1,9 +1,9 @@
 import { useState } from "react";
-// import useSWR from 'swr';
+import useSWR from 'swr';
 
 export default function Gallery({ files }) {
-    // const fetcher = (url) => fetch(url).then((res) => res.json());
-    // const { data: uploadedFiles } = useSWR('/api/files', fetcher);
+    const fetcher = (url) => fetch(url).then((res) => res.json());
+    const { data: uploadedFiles } = useSWR('/api/files', fetcher);
     const [image, setImage] = useState(null);
     const [createObjectURL, setCreateObjectURL] = useState(null);
 
@@ -51,7 +51,7 @@ export default function Gallery({ files }) {
                     alignItems: "center"
                 }}
                 >
-                    {files && files.map(imgPath => <img key={imgPath} src={imgPath} alt="" width="100px" height="100px" />)
+                    {uploadedFiles && uploadedFiles.map(imgPath => <img key={imgPath} src={imgPath} alt="" width="100px" height="100px" />)
                     }
                 </div>
             </main>
@@ -59,19 +59,3 @@ export default function Gallery({ files }) {
     );
 }
 
-export async function getServerSideProps(req, res) {
-    const dirRelativeToPublicFolder = 'upload'
-    const { readdirSync } = require("fs");
-    var path = require("path");
-    try {
-        const dir = path.join(process.cwd(), './pubmlic', dirRelativeToPublicFolder);
-        const fileNames = readdirSync(dir);
-        const files = fileNames.map(name => path.join('/', dirRelativeToPublicFolder, name))
-        return {
-            props: { files }
-        }
-    } catch (error) {
-        return { props: { files: [] } }
-    }
-
-}

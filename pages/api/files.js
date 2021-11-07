@@ -4,9 +4,9 @@ import path from "path";
 const getFiles = async (req, res) => {
     const dirRelativeToPublicFolder = 'upload'
     try {
-        const dir = path.join(process.cwd(), './public', dirRelativeToPublicFolder);
+        const dir = path.resolve(process.cwd(), './public', dirRelativeToPublicFolder);
         const fileNames = fs.readdirSync(dir);
-        const files = fileNames.map(name => path.join('/', dirRelativeToPublicFolder, name))
+        const files = fileNames.map(name => path.join(dirRelativeToPublicFolder, name))
         return res.status(201).send(files);
     } catch (error) {
         return res.status(404).send(error);
